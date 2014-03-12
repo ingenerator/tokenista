@@ -16,7 +16,7 @@
   "require": {
     "php":         ">=5.3.3",
     "ext-openssl": "*",
-    "lib-openssl": ">=1.*"
+    "lib-openssl": "*"
   },
 
   "require-dev": {
