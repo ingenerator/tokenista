@@ -1,0 +1,50 @@
+{
+  "name":        "ingenerator/tokenista",
+  "description": "Simple signed and expiring token generator and validator - for password reset, CSRF, authentication, whatever",
+  "keywords":    ["auth", "token", "csrf"],
+  "homepage":    "https://github.com/ingenerator/tokenista",
+  "type":        "library",
+  "license":     "BSD",
+  "authors":     [
+    {
+      "name":     "Andrew Coulton",
+      "email":    "andrew@ingenerator.com",
+      "homepage": "http://www.ingenerator.com"
+    }
+  ],
+
+  "require": {
+    "php": ">=5.3.3"
+  },
+
+  "require-dev": {
+    "phpspec/phpspec": "2.0.*@dev"
+  },
+
+  "suggest": {
+  },
+
+  "support": {
+    "issues": "https://github.com/ingenerator/tokenista/issues",
+    "source": "https://github.com/ingenerator/tokenista"
+  },
+
+  "autoload": {
+    "psr-0": {
+      "Ingenerator": "src/"
+    }
+  },
+
+  "bin": [],
+
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1.x-dev"
+    }
+  },
+
+  "config": {
+    "bin-dir":           "bin",
+    "preferred-install": "dist"
+  }
+}
