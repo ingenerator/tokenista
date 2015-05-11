@@ -56,10 +56,26 @@ class Tokenista
 			$lifetime = $this->options['lifetime'];
 		}
 
-		$expires = time() + $lifetime;
-		$token = base64_encode(openssl_random_pseudo_bytes(12, $strong));
+		$expires = $this->calculateExpiry($lifetime);
+		$token   = $this->makeToken();
 
 		return $token.'-'.$expires.'-'.$this->signToken($token, $expires, $extra_values);
+	}
+	
+	/**
+	 * @return int
+	 */
+	protected function calculateExpiry($lifetime)
+	{
+		return time() + $lifetime;
+	}
+	
+	/**
+	 * @return string
+	 */
+	protected function makeToken()
+	{
+		return base64_encode(openssl_random_pseudo_bytes(12, $strong));
 	}
 
 	/**
