@@ -44,11 +44,13 @@ class Tokenista
 	}
 
 	/**
-	 * @param int $lifetime for expiry, otherwise default will be used. Class default is 1 hour if not configured
+	 * @param int   $lifetime     for expiry, otherwise default will be used. Class default is 1 hour if not configured
+	 * @param array $extra_values extra values that should be signed with the token - the token will not be valid
+	 *                            unless the same values are presented when the token needs to be verified.
 	 *
 	 * @return string token in the format vufQO8H+9pwnb5hz-1394614391-11e7158dbde10057e1488cb7f64f7e4534b457ff
 	 */
-	public function generate($lifetime = NULL)
+	public function generate($lifetime = NULL, $extra_values = array())
 	{
 		if ($lifetime === NULL) {
 			$lifetime = $this->options['lifetime'];
@@ -57,40 +59,51 @@ class Tokenista
 		$expires = time() + $lifetime;
 		$token = base64_encode(openssl_random_pseudo_bytes(12, $strong));
 
-		return $token.'-'.$expires.'-'.$this->signToken($token, $expires);
+		return $token.'-'.$expires.'-'.$this->signToken($token, $expires, $extra_values);
 	}
 
 	/**
 	 * @param string $token
 	 * @param int    $expires
+	 * @param array  $extra_values
 	 *
 	 * @return string the signature
 	 */
-	protected function signToken($token, $expires)
+	protected function signToken($token, $expires, array $extra_values)
 	{
-		return hash_hmac('sha1', $token.'-'.$expires, $this->secret);
+		$sign_string = $token.'-'.$expires;
+		if ($extra_values) {
+			ksort($extra_values);
+			$sign_string .= ':'.json_encode($extra_values);
+		}
+
+		return hash_hmac('sha1', $sign_string, $this->secret);
 	}
 
 	/**
 	 * @param string $token_string
 	 *
+	 * @param array  $extra_values
+	 *
 	 * @return bool
 	 */
-	public function isValid($token_string)
+	public function isValid($token_string, array $extra_values = array())
 	{
-		return ! ($this->isTampered($token_string) OR $this->isExpired($token_string));
+		return ! ($this->isTampered($token_string, $extra_values) OR $this->isExpired($token_string));
 	}
 
 	/**
 	 * @param string $token_string
 	 *
+	 * @param array  $extra_values
+	 *
 	 * @return bool
 	 */
-	public function isTampered($token_string)
+	public function isTampered($token_string, array $extra_values = array())
 	{
 		$parts = $this->parseToken($token_string);
 
-		return ($parts['signature'] !== $this->signToken($parts['token'], $parts['expires']));
+		return ($parts['signature'] !== $this->signToken($parts['token'], $parts['expires'], $extra_values));
 	}
 
 	/**
@@ -102,10 +115,10 @@ class Tokenista
 	{
 		$parts = explode('-', $token_string);
 		if (count($parts) !== 3) {
-			$parts = array('', '', 'invalid');
+			$parts = ['', '', 'invalid'];
 		}
 
-		return array_combine(array('token', 'expires', 'signature'), $parts);
+		return array_combine(['token', 'expires', 'signature'], $parts);
 	}
 
 	/**

@@ -103,6 +103,39 @@ class TokenistaSpec extends ObjectBehavior
 		$this->subject->isTampered('some random string')->shouldBe(TRUE);
 	}
 
+	function it_validates_token_signed_with_additional_parameters()
+	{
+		$token = $this->subject->generate(3600, array('email' => 'test@123.456.com'));
+		$this->subject->isValid($token, array('email' => 'test@123.456.com'))->shouldBe(TRUE);
+		$this->subject->isTampered($token, array('email' => 'test@123.456.com'))->shouldBe(FALSE);
+	}
 
+	function it_does_not_validate_token_signed_with_additional_parameters_if_not_provided_to_verify()
+	{
+		$token = $this->subject->generate(3600, array('email' => 'test@123.456.com'));
+		$this->subject->isValid($token)->shouldBe(FALSE);
+		$this->subject->isTampered($token)->shouldBe(TRUE);
+	}
+
+	function it_does_not_validate_token_signed_with_additional_parameters_if_tampered()
+	{
+		$token = $this->subject->generate(3600, array('email' => 'test@123.456.com'));
+		$this->subject->isValid($token, array('email' => 'bad@bad.com'))->shouldBe(FALSE);
+		$this->subject->isTampered($token, array('email' => 'bad@bad.com'))->shouldBe(TRUE);
+	}
+
+	function it_does_not_validate_token_that_had_no_additional_parameters_if_tampered()
+	{
+		$token = $this->subject->generate(3600);
+		$this->subject->isValid($token, array('email' => 'bad@bad.com'))->shouldBe(FALSE);
+		$this->subject->isTampered($token, array('email' => 'bad@bad.com'))->shouldBe(TRUE);
+	}
+
+	function it_validates_token_with_out_of_sequence_additional_parameters()
+	{
+		$token = $this->subject->generate(3600, array('email' => 'test@123.456.com', 'stuff' => 'whatever'));
+		$this->subject->isValid($token, array('stuff' => 'whatever', 'email' => 'test@123.456.com'))->shouldBe(TRUE);
+		$this->subject->isTampered($token, array('stuff' => 'whatever', 'email' => 'test@123.456.com'))->shouldBe(FALSE);
+	}
 
 }
