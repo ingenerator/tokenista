@@ -115,10 +115,10 @@ class Tokenista
 	{
 		$parts = explode('-', $token_string);
 		if (count($parts) !== 3) {
-			$parts = ['', '', 'invalid'];
+			$parts = array('', '', 'invalid');
 		}
 
-		return array_combine(['token', 'expires', 'signature'], $parts);
+		return array_combine(array('token', 'expires', 'signature'), $parts);
 	}
 
 	/**
