@@ -52,8 +52,7 @@ if ($tokenista->isValid($_GET['token'], ['user_id' => $_GET['user_id']]) {
   // You can now trust user_id, even if it came through the URL, because it matches the value you originally signed
   // for this token.
 }
-
-
+```
 
 
 ## Testing and developing
