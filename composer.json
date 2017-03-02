@@ -33,11 +33,14 @@
 
   "autoload": {
     "psr-0": {
-      "Ingenerator": "src/",
-      "spec":        ""
+      "Ingenerator": "src/"
     }
   },
-
+  "autoload-dev": {
+    "psr-4": {
+      "spec\\": "spec"
+    }
+  },
   "bin": [],
 
   "extra": {
