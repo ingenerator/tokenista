@@ -4,7 +4,7 @@
   "keywords":    ["auth", "token", "csrf"],
   "homepage":    "https://github.com/ingenerator/tokenista",
   "type":        "library",
-  "license":     "BSD",
+  "license":     "BSD-3-Clause",
   "authors":     [
     {
       "name":     "Andrew Coulton",
