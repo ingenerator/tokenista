@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+* Drop support for PHP <=5.5
+
 ## 1.0.2 / 2017-03-02
 
 * [BUGFIX] Fix composer autoloader for development classes so it doesn't conflict
