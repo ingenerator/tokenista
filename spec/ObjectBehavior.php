@@ -10,6 +10,10 @@
 
 namespace spec;
 
+use PhpSpec\Exception\Example\FailureException;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory;
+
 abstract class ObjectBehavior extends \PhpSpec\ObjectBehavior
 {
 
@@ -38,6 +42,17 @@ abstract class ObjectBehavior extends \PhpSpec\ObjectBehavior
     public function __construct()
     {
         $this->subject = $this;
+    }
+
+    public function expectEquals($expect, $actual)
+    {
+        try {
+            Factory::getInstance()
+                ->getComparatorFor($expect, $actual)
+                ->assertEquals($expect, $actual);
+        } catch (ComparisonFailure $e) {
+            throw new FailureException($e->getMessage()."\n".$e->getDiff());
+        }
     }
 
 }

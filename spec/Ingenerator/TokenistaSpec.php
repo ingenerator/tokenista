@@ -11,6 +11,7 @@ namespace spec\Ingenerator;
 
 use Ingenerator\Tokenista;
 use Prophecy\Argument;
+use SebastianBergmann\Comparator\ArrayComparator;
 use spec\ObjectBehavior;
 
 /**
@@ -84,6 +85,43 @@ class TokenistaSpec extends ObjectBehavior
 
         $this->subject->isValid($other_token)->shouldBe(FALSE);
         $this->subject->isTampered($other_token)->shouldBe(TRUE);
+    }
+
+    function it_optionally_validates_token_signed_with_old_secret_during_rotation()
+    {
+        $instances        = [
+            'retired' => new Tokenista('retired-not-valid'),
+            'null'    => new Tokenista(NULL),
+            'oldest'  => new Tokenista('oldest-secret'),
+            'older'   => new Tokenista('older-secret'),
+        ];
+        $instances['new'] = $new = new Tokenista(
+            'new-secret',
+            [
+                'old_secrets' => [
+                    NULL,
+                    'oldest-secret',
+                    'older-secret'
+                ]
+            ]
+        );
+
+        $result = [];
+        foreach ($instances as $label => $instance) {
+            /** @var Tokenista $instance */
+            $result[$label] = $new->isValid($instance->generate(10));
+        }
+
+        $this->expectEquals(
+            [
+                'retired' => FALSE,
+                'null'    => TRUE,
+                'oldest'  => TRUE,
+                'older'   => TRUE,
+                'new'     => TRUE
+            ],
+            $result
+        );
     }
 
     function it_handles_invalid_token_format_without_error()
