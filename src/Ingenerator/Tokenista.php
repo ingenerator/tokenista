@@ -30,7 +30,8 @@ class Tokenista
      * @var array
      */
     protected static $default_options = [
-        'lifetime' => 3600
+        'lifetime'    => 3600,
+        'old_secrets' => []
     ];
 
     /**
@@ -59,7 +60,12 @@ class Tokenista
         $expires = $this->calculateExpiry($lifetime);
         $token   = $this->makeToken();
 
-        return $token.'-'.$expires.'-'.$this->signToken($token, $expires, $extra_values);
+        return $token.'-'.$expires.'-'.$this->signToken(
+                $token,
+                $expires,
+                $extra_values,
+                $this->secret
+            );
     }
 
     /**
@@ -82,10 +88,11 @@ class Tokenista
      * @param string $token
      * @param int    $expires
      * @param array  $extra_values
+     * @param string $secret
      *
      * @return string the signature
      */
-    protected function signToken($token, $expires, array $extra_values)
+    protected function signToken($token, $expires, array $extra_values, $secret)
     {
         $sign_string = $token.'-'.$expires;
         if ($extra_values) {
@@ -93,7 +100,7 @@ class Tokenista
             $sign_string .= ':'.json_encode($extra_values);
         }
 
-        return hash_hmac('sha1', $sign_string, $this->secret);
+        return hash_hmac('sha1', $sign_string, $secret);
     }
 
     /**
@@ -121,11 +128,15 @@ class Tokenista
     {
         $parts = $this->parseToken($token_string);
 
-        return ($parts['signature'] !== $this->signToken(
-                $parts['token'],
-                $parts['expires'],
-                $extra_values
-            ));
+        $secrets = array_merge([$this->secret], $this->options['old_secrets']);
+        foreach ($secrets as $secret) {
+            $sig = $this->signToken($parts['token'], $parts['expires'], $extra_values, $secret);
+            if ($parts['signature'] === $sig) {
+                return FALSE;
+            }
+        }
+
+        return TRUE;
     }
 
     /**
