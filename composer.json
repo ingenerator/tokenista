@@ -20,7 +20,7 @@
   },
 
   "require-dev": {
-    "phpspec/phpspec": "^2.0"
+    "phpunit/phpunit": "^4.8 || ^5.5 || ^6.5"
   },
 
   "suggest": {
@@ -32,13 +32,13 @@
   },
 
   "autoload": {
-    "psr-0": {
-      "Ingenerator": "src/"
+    "psr-4": {
+      "Ingenerator\\": "src/Ingenerator"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "spec\\": "spec"
+      "Ingenerator\\Tests\\": "tests/Ingenerator"
     }
   },
   "bin": [],
