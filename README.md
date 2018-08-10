@@ -58,7 +58,7 @@ if ($tokenista->isValid($_GET['token'], ['user_id' => $_GET['user_id']]) {
 
 It's good practice to occasionally rotate secrets - but without invalidating signatures
 that haven't yet expired. This is easily done - add an `old_secrets` config option with
-any previous secrets that should still be valid. Tokenista will start using the new 
+any previous secrets that should still be valid. Tokenista will start using the new
 secret to produce new tokens while still accepting tokens signed with an older value.
 
 Once your maximum token expiry liftime has passed you can then remove the old secret from
@@ -66,8 +66,8 @@ your list and Tokenista will stop accepting it.
 
 ## Testing and developing
 
-tokenista has a full suite of [PhpSpec](http://phpspec.net) specifications - run them with `bin/phpspec run`.
-Contributions will only be accepted if they are accompanied by well structured specs. Installing with composer should
+tokenista has a full suite of [PHPUnit](http://phpunit.de) unit tests - run them with `bin/phpunit`.
+Contributions will only be accepted if they are accompanied by well structured unit tests. Installing with composer should
 get you everything you need to work on the project.
 
 ## License
