@@ -41,7 +41,7 @@ class Tokenista
     public function __construct($secret, $options = [])
     {
         $this->secret  = $secret;
-        $this->options = array_merge(static::$default_options, $options);
+        $this->options = \array_merge(static::$default_options, $options);
     }
 
     /**
@@ -73,7 +73,7 @@ class Tokenista
      */
     protected function calculateExpiry($lifetime)
     {
-        return time() + $lifetime;
+        return \time() + $lifetime;
     }
 
     /**
@@ -81,7 +81,7 @@ class Tokenista
      */
     protected function makeToken()
     {
-        return base64_encode(openssl_random_pseudo_bytes(12, $strong));
+        return \base64_encode(\openssl_random_pseudo_bytes(12, $strong));
     }
 
     /**
@@ -96,11 +96,11 @@ class Tokenista
     {
         $sign_string = $token.'-'.$expires;
         if ($extra_values) {
-            ksort($extra_values);
-            $sign_string .= ':'.json_encode($extra_values);
+            \ksort($extra_values);
+            $sign_string .= ':'.\json_encode($extra_values);
         }
 
-        return hash_hmac('sha1', $sign_string, $secret);
+        return \hash_hmac('sha1', $sign_string, $secret);
     }
 
     /**
@@ -128,7 +128,7 @@ class Tokenista
     {
         $parts = $this->parseToken($token_string);
 
-        $secrets = array_merge([$this->secret], $this->options['old_secrets']);
+        $secrets = \array_merge([$this->secret], $this->options['old_secrets']);
         foreach ($secrets as $secret) {
             $sig = $this->signToken($parts['token'], $parts['expires'], $extra_values, $secret);
             if ($parts['signature'] === $sig) {
@@ -146,12 +146,12 @@ class Tokenista
      */
     protected function parseToken($token_string)
     {
-        $parts = explode('-', $token_string);
-        if (count($parts) !== 3) {
+        $parts = \explode('-', $token_string);
+        if (\count($parts) !== 3) {
             $parts = ['', '', 'invalid'];
         }
 
-        return array_combine(['token', 'expires', 'signature'], $parts);
+        return \array_combine(['token', 'expires', 'signature'], $parts);
     }
 
     /**
@@ -163,6 +163,6 @@ class Tokenista
     {
         $parts = $this->parseToken($token_string);
 
-        return (time() >= $parts['expires']);
+        return (\time() >= $parts['expires']);
     }
 }
