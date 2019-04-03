@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.2.0 (2019-04-03)
+
+* Drop support for php5 and test on php7
+
 ## 1.1.0 (2018-02-26)
 
 * Add support for rotating secrets with an `old_secrets` config option

@@ -58,7 +58,7 @@ class TokenistaTest extends TestCase
     public function test_it_does_not_validate_tampered_token()
     {
         $tokenString = $this->tokenista->generate(3600);
-        $tokenString[rand(0, strlen($tokenString) - 1)] = '~';
+        $tokenString[\rand(0, \strlen($tokenString) - 1)] = '~';
 
         $this->assertFalse($this->tokenista->isValid($tokenString));
     }
