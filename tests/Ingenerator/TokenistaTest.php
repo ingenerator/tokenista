@@ -3,6 +3,7 @@
 namespace Ingenerator\Tests;
 
 use Ingenerator\Tokenista;
+use Ingenerator\TokenistaValidationResult;
 use PHPUnit\Framework\TestCase;
 
 class TokenistaTest extends TestCase
@@ -163,7 +164,97 @@ class TokenistaTest extends TestCase
         );
 
         $this->assertTrue($this->tokenista->isValid($token, ['stuff' => 'whatever', 'email' => 'test@123.456.com']));
-        $this->assertFalse($this->tokenista->isTampered($token, ['stuff' => 'whatever', 'email' => 'test@123.456.com']));
+        $this->assertFalse(
+            $this->tokenista->isTampered($token, ['stuff' => 'whatever', 'email' => 'test@123.456.com'])
+        );
+    }
+
+    public function provider_validate()
+    {
+        return [
+            [
+                ['ttl' => 3600, 'params' => []],
+                ['params' => []],
+                [
+                    'is_expired'  => FALSE,
+                    'is_tampered' => FALSE,
+                    'is_valid'    => TRUE,
+                    'status'      => TokenistaValidationResult::VALID,
+                ],
+            ],
+            [
+                ['ttl' => -3600, 'params' => []],
+                ['params' => []],
+                [
+                    'is_expired'  => TRUE,
+                    'is_tampered' => FALSE,
+                    'is_valid'    => FALSE,
+                    'status'      => TokenistaValidationResult::INVALID_EXPIRED,
+                ],
+            ],
+            [
+                ['ttl' => 3600, 'params' => ['foobar']],
+                ['params' => ['foobar']],
+                [
+                    'is_expired'  => FALSE,
+                    'is_tampered' => FALSE,
+                    'is_valid'    => TRUE,
+                    'status'      => TokenistaValidationResult::VALID,
+                ],
+            ],
+            [
+                ['ttl' => 3600, 'params' => ['foobar']],
+                ['params' => ['you changed me']],
+                [
+                    'is_expired'  => FALSE,
+                    'is_tampered' => TRUE,
+                    'is_valid'    => FALSE,
+                    'status'      => TokenistaValidationResult::INVALID_TAMPERED,
+                ],
+            ],
+            [
+                ['ttl' => -3600, 'params' => ['foobar']],
+                ['params' => ['you changed me']],
+                [
+                    'is_expired'  => TRUE,
+                    'is_tampered' => TRUE,
+                    'is_valid'    => FALSE,
+                    'status'      => TokenistaValidationResult::INVALID_TAMPERED.','.TokenistaValidationResult::INVALID_EXPIRED,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provider_validate
+     */
+    public function test_its_validate_method_returns_validation_result_with_expected_state(
+        $token_params,
+        $validate_params,
+        $expect_status
+    ) {
+        $token  = $this->tokenista->generate($token_params['ttl'], $token_params['params']);
+        $result = $this->tokenista->validate($token, $validate_params['params']);
+        $this->assertSame(
+            $expect_status,
+            [
+                'is_expired'  => $result->isExpired(),
+                'is_tampered' => $result->isTampered(),
+                'is_valid'    => $result->isValid(),
+                'status'      => $result->getStatusCodes(),
+            ]
+        );
+    }
+
+    /**
+     * @testWith [-1800]
+     *           [1800]
+     */
+    public function test_its_validation_result_includes_token_expiry_time($ttl)
+    {
+        $token  = $this->tokenista->generate($ttl);
+        $result = $this->tokenista->validate($token);
+        $this->assertEqualsWithDelta(time() + $ttl, $result->getTokenExpiry()->getTimestamp(), 1);
     }
 
 }
