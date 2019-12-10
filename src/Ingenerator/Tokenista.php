@@ -31,7 +31,7 @@ class Tokenista
      */
     protected static $default_options = [
         'lifetime'    => 3600,
-        'old_secrets' => []
+        'old_secrets' => [],
     ];
 
     /**
@@ -109,12 +109,11 @@ class Tokenista
      * @param array  $extra_values
      *
      * @return bool
+     * @deprecated Use Tokenista::validate instead
      */
     public function isValid($token_string, array $extra_values = [])
     {
-        return ! ($this->isTampered($token_string, $extra_values) OR $this->isExpired(
-                $token_string
-            ));
+        return $this->validate($token_string, $extra_values)->isValid();
     }
 
     /**
@@ -123,20 +122,11 @@ class Tokenista
      * @param array  $extra_values
      *
      * @return bool
+     * @deprecated Use Tokenista::validate instead
      */
     public function isTampered($token_string, array $extra_values = [])
     {
-        $parts = $this->parseToken($token_string);
-
-        $secrets = \array_merge([$this->secret], $this->options['old_secrets']);
-        foreach ($secrets as $secret) {
-            $sig = $this->signToken($parts['token'], $parts['expires'], $extra_values, $secret);
-            if ($parts['signature'] === $sig) {
-                return FALSE;
-            }
-        }
-
-        return TRUE;
+        return $this->validate($token_string, $extra_values)->isTampered();
     }
 
     /**
@@ -151,18 +141,54 @@ class Tokenista
             $parts = ['', '', 'invalid'];
         }
 
-        return \array_combine(['token', 'expires', 'signature'], $parts);
+        $result            = \array_combine(['token', 'expires', 'signature'], $parts);
+        $result['expires'] = (int) $result['expires'];
+
+        return $result;
     }
 
     /**
      * @param string $token_string
      *
      * @return bool
+     * @deprecated Use Tokenista::validate instead
      */
     public function isExpired($token_string)
     {
+        // Note: it doesn't matter that we don't pass through extra params as we only want to know about expiry for
+        // this method.
+        return $this->validate($token_string)->isExpired();
+    }
+
+    public function validate(?string $token_string, array $extra_values = []): TokenistaValidationResult
+    {
         $parts = $this->parseToken($token_string);
 
-        return (\time() >= $parts['expires']);
+        return new TokenistaValidationResult(
+            [
+                TokenistaValidationResult::INVALID_TAMPERED => ! $this->isSignatureValid($parts, $extra_values),
+                TokenistaValidationResult::INVALID_EXPIRED  => (\time() >= $parts['expires']),
+            ],
+            $parts['expires']
+        );
+    }
+
+    /**
+     * @param array $parts
+     * @param array $extra_values
+     *
+     * @return bool
+     */
+    protected function isSignatureValid(array $parts, array $extra_values): bool
+    {
+        $secrets = \array_merge([$this->secret], $this->options['old_secrets']);
+        foreach ($secrets as $secret) {
+            $sig = $this->signToken($parts['token'], $parts['expires'], $extra_values, $secret);
+            if ($parts['signature'] === $sig) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
     }
 }

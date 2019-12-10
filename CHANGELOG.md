@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.3.0 (2019-12-10)
+
+* [DEPRECATION] Deprecate the `isExpired`, `isValid` and `isTampered` methods on 
+  Tokenista itself in favour of using the new `validate` method to get a more fully
+  -formed result.
+* Introduce new Tokenista::validate method and a validation result object to simplify
+  flows where the handling of an invalid token is the same but you want to e.g. log an
+  expired token differently to a tampered one.
+
 ## 1.2.0 (2019-04-03)
 
 * Drop support for php5 and test on php7
