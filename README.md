@@ -12,7 +12,7 @@ Add tokenista to your composer.json and run `composer update` to install it.
 
 ```json
 {
-  "require": { "ingenerator/tokenista": "^1.3" }
+  "require": { "ingenerator/tokenista": "^1.4" }
 }
 ```
 

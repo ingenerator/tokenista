@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.4.0 (2020-10-29)
+
+* Support php7.4
+
 ## 1.3.0 (2019-12-10)
 
 * [DEPRECATION] Deprecate the `isExpired`, `isValid` and `isTampered` methods on 
