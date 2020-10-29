@@ -12,7 +12,7 @@ class TokenistaTest extends TestCase
 
     protected $tokenista;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tokenista = new Tokenista(self::SECRET);
     }
@@ -24,7 +24,10 @@ class TokenistaTest extends TestCase
 
     public function test_it_generates_token_strings_in_expected_format()
     {
-        $this->assertRegExp('/^[A-Za-z0-9+\/]{16}-[0-9]+-[A-Za-z0-9+\/]{40}$/', $this->tokenista->generate());
+        $this->assertMatchesRegularExpression(
+            '/^[A-Za-z0-9+\/]{16}-[0-9]+-[A-Za-z0-9+\/]{40}$/',
+            $this->tokenista->generate()
+        );
     }
 
     public function test_it_generates_new_random_tokens_each_time()

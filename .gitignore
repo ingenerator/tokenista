@@ -1,5 +1,5 @@
-/.vagrant
 /vendor
 /bin
 /.idea
 composer.lock
+.phpunit.result.cache

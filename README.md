@@ -12,7 +12,7 @@ Add tokenista to your composer.json and run `composer update` to install it.
 
 ```json
 {
-  "require": { "ingenerator/tokenista": "0.1.*@dev" }
+  "require": { "ingenerator/tokenista": "^1.3" }
 }
 ```
 
@@ -66,7 +66,7 @@ your list and Tokenista will stop accepting it.
 
 ## Testing and developing
 
-tokenista has a full suite of [PHPUnit](http://phpunit.de) unit tests - run them with `bin/phpunit`.
+tokenista has a full suite of [PHPUnit](http://phpunit.de) unit tests - run them with `./vendor/bin/phpunit`.
 Contributions will only be accepted if they are accompanied by well structured unit tests. Installing with composer should
 get you everything you need to work on the project.
 

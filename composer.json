@@ -9,28 +9,23 @@
     {
       "name":     "Andrew Coulton",
       "email":    "andrew@ingenerator.com",
-      "homepage": "http://www.ingenerator.com"
+      "homepage": "https://www.ingenerator.com"
     }
   ],
-
   "require": {
-    "php":         "^7.2",
+    "php":         "^7.4",
     "ext-openssl": "*",
     "lib-openssl": "*"
   },
-
   "require-dev": {
-    "phpunit/phpunit": "^7.0"
+    "phpunit/phpunit": "^9.0"
   },
-
   "suggest": {
   },
-
   "support": {
     "issues": "https://github.com/ingenerator/tokenista/issues",
     "source": "https://github.com/ingenerator/tokenista"
   },
-
   "autoload": {
     "psr-4": {
       "Ingenerator\\": "src/Ingenerator"
@@ -41,16 +36,12 @@
       "Ingenerator\\Tests\\": "tests/Ingenerator"
     }
   },
-  "bin": [],
-
   "extra": {
     "branch-alias": {
       "dev-master": "1.0.x-dev"
     }
   },
-
   "config": {
-    "bin-dir":           "bin",
     "preferred-install": "dist"
   }
 }
