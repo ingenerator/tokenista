@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.5.0 (2021-04-19)
+
+* Support PHP8
+
 ## 1.4.0 (2020-10-29)
 
 * Support php7.4
