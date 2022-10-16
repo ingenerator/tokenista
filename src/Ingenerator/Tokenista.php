@@ -100,7 +100,7 @@ class Tokenista
             $sign_string .= ':'.\json_encode($extra_values);
         }
 
-        return \hash_hmac('sha1', $sign_string, $secret);
+        return \hash_hmac('sha1', $sign_string, (string) $secret);
     }
 
     /**
