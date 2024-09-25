@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.7.0 (2024-09-25)
+
+* Support PHP 8.3
+* Upgrade tests to PHPUnit 10
+* Don't export test code with package
+
 ## 1.6.0 (2022-10-16)
 
 * Support PHP 8.1 and PHP 8.2
