@@ -76,7 +76,7 @@ class TokenistaTest extends TestCase
         $this->assertTrue($this->tokenista->isTampered($otherTokenString));
     }
 
-    public function oldSecretDataProvider()
+    public static function oldSecretDataProvider(): array
     {
         return [
             ['retired-not-valid', [], false],
@@ -172,7 +172,7 @@ class TokenistaTest extends TestCase
         );
     }
 
-    public function provider_validate()
+    public static function provider_validate(): array
     {
         return [
             [
