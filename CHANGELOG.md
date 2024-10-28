@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 1.7.1 (2024-10-28)
+
+* Fix gitattributes to exclude tests dir from built package
+
 ## 1.7.0 (2024-09-25)
 
 * Support PHP 8.3
