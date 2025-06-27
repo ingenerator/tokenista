@@ -17,7 +17,7 @@ jobs:
         - '8.1'
         - '8.2'
         - '8.3'
-        dependencies:
+        dependency-versions:
         - 'default'
 
     steps:
@@ -28,29 +28,14 @@ jobs:
         tools: composer:v2
 
     - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Get composer cache directory
-      id: composer-cache
-      run: |
-        echo "::set-output name=dir::$(composer config cache-files-dir)"
-    - uses: actions/cache@v2
+      uses: actions/checkout@v4
       with:
-        path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-${{ matrix.dependencies }}
+        show-progress: false
 
     - name: Install composer dependencies
-      env:
-        DEPENDENCIES: ${{ matrix.dependencies }}
-      run: |
-        if [ $DEPENDENCIES == 'lowest' ]
-        then
-          composer update --prefer-lowest --no-interaction --no-progress
-        else
-          composer install --no-interaction --no-progress
-        fi
+      uses: ramsey/composer-install@v3
+      with:
+        dependency-versions: ${{ matrix.dependency-versions }}
 
     - name: Run unit tests
       run: |
