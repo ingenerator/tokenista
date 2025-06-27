@@ -4,6 +4,7 @@ namespace Ingenerator\Tests;
 
 use Ingenerator\Tokenista;
 use Ingenerator\TokenistaValidationResult;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class TokenistaTest extends TestCase
@@ -93,9 +94,7 @@ class TokenistaTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider oldSecretDataProvider
-     */
+    #[DataProvider('oldSecretDataProvider')]
     public function test_it_optionally_validates_token_signed_with_old_secret_during_rotation($secretString, $option, $expectedValue)
     {
         $tokenista = new Tokenista($secretString, $option);
@@ -228,9 +227,7 @@ class TokenistaTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provider_validate
-     */
+    #[DataProvider('provider_validate')]
     public function test_its_validate_method_returns_validation_result_with_expected_state(
         $token_params,
         $validate_params,
