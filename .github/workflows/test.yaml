@@ -28,12 +28,12 @@ jobs:
         tools: composer:v2
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         show-progress: false
 
     - name: Install composer dependencies
-      uses: ramsey/composer-install@v3
+      uses: ramsey/composer-install@v4
       with:
         dependency-versions: ${{ matrix.dependency-versions }}
 
