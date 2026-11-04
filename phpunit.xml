@@ -3,16 +3,26 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          colors="true"
          failOnDeprecation="true"
+         failOnPhpunitDeprecation="true"
+         failOnPhpunitNotice="true"
          failOnNotice="true"
          failOnWarning="true"
          failOnRisky="true"
          displayDetailsOnIncompleteTests="true"
          displayDetailsOnSkippedTests="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnPhpunitDeprecations="true"
+         displayDetailsOnPhpunitNotices="true"
          displayDetailsOnTestsThatTriggerErrors="true"
          displayDetailsOnTestsThatTriggerNotices="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd">
+         stopOnDeprecation="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd">
+  <source>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </source>
   <testsuites>
     <testsuite name="unit">
       <directory>tests</directory>
