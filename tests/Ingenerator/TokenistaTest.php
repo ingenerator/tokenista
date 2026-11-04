@@ -5,6 +5,7 @@ namespace Ingenerator\Tests;
 use Ingenerator\Tokenista;
 use Ingenerator\TokenistaValidationResult;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 
 class TokenistaTest extends TestCase
@@ -246,10 +247,8 @@ class TokenistaTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [-1800]
-     *           [1800]
-     */
+    #[TestWith([-1800])]
+    #[TestWith([1800])]
     public function test_its_validation_result_includes_token_expiry_time($ttl)
     {
         $token  = $this->tokenista->generate($ttl);
